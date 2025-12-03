@@ -61,6 +61,19 @@ let flashCounter = 0;
 let dinoGame = null;
 let showDinoGame = false;
 let dinoGameCount = 0;
+let dinoImage = null; // Voor de dino afbeelding
+
+// Laad de dino afbeelding voordat het spel start
+function preload() {
+  // BELANGRIJKE INSTRUCTIE:
+  // Upload je PNG bestand in de P5.js editor
+  // Verander 'dino.png' naar de exacte naam van jouw bestand
+  try {
+    dinoImage = loadImage('dino.png');
+  } catch (e) {
+    console.log('Kon dino.png niet laden. Zorg dat het bestand is geüpload!');
+  }
+}
 
 // -------------------------
 // Dino Game Classes
@@ -70,13 +83,14 @@ class Dino {
   constructor() {
     this.x = 100;
     this.y = 0; // offset from ground
-    this.width = 40;
-    this.height = 40;
+    this.width = 44;
+    this.height = 47;
     this.vy = 0;
     this.gravity = 0.8;
     this.jumpPower = -15;
     this.onGround = true;
     this.onPlatform = false;
+    this.legFrame = 0; // Voor animatie
   }
 
   jump() {
@@ -101,87 +115,37 @@ class Dino {
       this.onGround = true;
       this.onPlatform = false;
     }
+    
+    // Animeer pootjes
+    if (this.onGround && frameCount % 6 === 0) {
+      this.legFrame = (this.legFrame + 1) % 2;
+    }
   }
 
   draw(gameY) {
     push();
-    // Bereken positie vanaf de grond (onderkant van game area)
     let groundY = gameY + (CELL_SIZE * 2) - this.height;
     let drawY = groundY + this.y;
     
-    // Dino body (donkerder groen lichaam)
-    fill(88, 157, 62);
+    // Schaduw onder de dino
+    fill(0, 0, 0, 40);
     noStroke();
-    ellipse(this.x + 15, drawY + 25, 28, 32);
+    ellipse(this.x + this.width/2, drawY + this.height + 2, this.width * 0.8, 10);
     
-    // Dino head (lichter groen)
-    fill(106, 176, 76);
-    ellipse(this.x + 28, drawY + 10, 22, 20);
-    
-    // Snuit
-    fill(118, 185, 90);
-    ellipse(this.x + 35, drawY + 12, 12, 10);
-    
-    // Neusgat
-    fill(60, 60, 60);
-    ellipse(this.x + 38, drawY + 12, 3, 2);
-    
-    // Oog wit
-    fill(255);
-    ellipse(this.x + 28, drawY + 8, 8, 9);
-    
-    // Oog pupil
-    fill(0);
-    ellipse(this.x + 29, drawY + 8, 4, 5);
-    
-    // Oogglans
-    fill(255);
-    ellipse(this.x + 30, drawY + 7, 2, 2);
-    
-    // Mond (glimlach)
-    noFill();
-    stroke(60, 100, 50);
-    strokeWeight(1.5);
-    arc(this.x + 32, drawY + 14, 8, 6, 0, PI);
-    
-    // Dino rug spikes (3 stekels)
-    noStroke();
-    fill(76, 140, 55);
-    // Grote stekel
-    triangle(this.x + 8, drawY + 18, this.x + 12, drawY + 8, this.x + 16, drawY + 18);
-    // Middelste stekel
-    triangle(this.x + 14, drawY + 18, this.x + 17, drawY + 11, this.x + 20, drawY + 18);
-    // Kleine stekel
-    triangle(this.x + 18, drawY + 18, this.x + 21, drawY + 13, this.x + 24, drawY + 18);
-    
-    // Dino staart (dikker en ronder)
-    fill(88, 157, 62);
-    ellipse(this.x + 2, drawY + 22, 10, 12);
-    ellipse(this.x - 2, drawY + 20, 6, 8);
-    
-    // Staart punt
-    fill(76, 140, 55);
-    ellipse(this.x - 4, drawY + 18, 4, 5);
-    
-    // Dino voorpoot
-    fill(88, 157, 62);
-    ellipse(this.x + 18, drawY + 35, 8, 12);
-    
-    // Dino achterpoot
-    ellipse(this.x + 10, drawY + 36, 9, 13);
-    
-    // Teen nageltjes (voorpoot)
-    fill(76, 140, 55);
-    ellipse(this.x + 16, drawY + 40, 3, 3);
-    ellipse(this.x + 19, drawY + 40, 3, 3);
-    
-    // Teen nageltjes (achterpoot)
-    ellipse(this.x + 8, drawY + 41, 3, 3);
-    ellipse(this.x + 11, drawY + 41, 3, 3);
+    // Teken de dino afbeelding
+    if (dinoImage) {
+      // Als afbeelding succesvol is geladen
+      imageMode(CORNER);
+      image(dinoImage, this.x, drawY, this.width, this.height);
+    } else {
+      // Fallback: Teken emoji als afbeelding niet beschikbaar is
+      textAlign(CENTER, CENTER);
+      textSize(this.height);
+      text('🦖', this.x + this.width/2, drawY + this.height/2);
+    }
     
     pop();
   }
-
 
   getBottom(gameY) {
     let groundY = gameY + (CELL_SIZE * 2) - this.height;
@@ -834,16 +798,16 @@ function showInfo() {
     `;
 
     popup.innerHTML = `
-        <h2 style="color: #F44336; margin-top: 0;">Summon the Dragon 🦖</h2><br>
+        <h2 style="color: #F44336; margin-top: 0;">Drag2flash 🦖</h2><br>
         <p style="color: #0E0E0E; line-height: 1.6;">
-            <strong>Doel:<br></strong> Los alle 10 sommen correct op en speel de Dragon game!<br>
+            <strong>Doel:<br></strong> Los alle 10 sommen correct op en speel de Dino game!<br>
             <strong>Hoe speel je:</strong>
             <ol style="color: #0909B4; margin: 10px 0;">
                 <li>Sleep blauwe somblokjes naar de juiste oranje antwoorden</li>
                 <li>Klik "Nakijken" om je antwoorden te controleren</li>
-                <li>Bij 10/10 start de Dragon game automatisch! 🎮</li>
+                <li>Bij 10/10 start de Dino game automatisch! 🎮</li>
             </ol>
-            <strong>Dragon Game:<br></strong> Spring met SPATIE of KLIK. Spring op platforms voor extra boost!<br>
+            <strong>Dino Game:<br></strong> Spring met SPATIE of KLIK. Spring op platforms voor extra boost!<br>
             Na 3 game overs komt er een volledige reset.<br><br>
             <strong>Reset:<br></strong> Klik "Reset" voor nieuwe sommen.
         </p>
