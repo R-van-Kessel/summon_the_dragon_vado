@@ -491,10 +491,10 @@ function setup() {
     infoButton.mousePressed(showInfo);
     styleButton(infoButton, '#03A9F4', '10px 30px');
 
-    generateQuestions();
    // Positioneer knoppen NA het aanmaken
     updateButtonPositions();
-}
+    generateQuestions();
+   }
 
 function generateQuestions() {
     blocks = [];
