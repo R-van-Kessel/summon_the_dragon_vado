@@ -915,7 +915,7 @@ function showInfo() {
             <strong>Dragon Game:<br></strong> Spring met spatie of muisklik.<br> Spring op de hoge gele trampolines voor extra boost!<br>
             Na 3 game-overs komt er een volledige reset.<br>
 <ol style="color: #F44336; margin: 5px 0;">
-            Highscore record = 31</ol><br>
+            Highscore record = 36 (Sven)</ol><br>
             <strong>Reset:<br></strong> Klik "Reset" voor nieuwe sommen.
         </p>
         <button id="closeBtn" style="
