@@ -543,7 +543,7 @@ function showInfo() {
     
     popup.innerHTML = `
         <h2 style="margin-top: 0;">
-        <a href="https://r-van-kessel.github.io/Summon_the_Dragon/index.html" target="_blank" style="color: #F44336; text-decoration: none; cursor:pointer;">Summon the Dragon</a>
+        <a href="https://r-van-kessel.github.io/Summon_the_Dragon/index.html" target="_self" style="color: #F44336; text-decoration: none; cursor:pointer;">Summon the Dragon</a>
         </h2><br>
         <p style="color: #0E0E0E; line-height: 1.2;">
             <strong>Doel:<br></strong> Los alle 10 sommen correct op en speel de Dragon game!</ol><br><br>
@@ -975,7 +975,7 @@ function mousePressed() {
         mouseX < titleX + titleWidth/2 && 
         mouseY > TITLE_Y && 
         mouseY < TITLE_Y + TITLE_SIZE) {
-        window.open('https://r-van-kessel.github.io/Summon_the_Dragon/index.html', '_blank');
+        window.open('https://r-van-kessel.github.io/Summon_the_Dragon/index.html', '_self');
     }
     
     if (document.getElementById('infoPopup')) return false;
